@@ -8,4 +8,4 @@ const Token = model(
   })
 );
 
-module.exports(Token);
+module.exports = Token;
