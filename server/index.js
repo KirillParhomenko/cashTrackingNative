@@ -1,24 +1,28 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cookieparser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const dotenv = require("dotenv");
 const authRouter = require("./routers/auth-router");
+const errorsMiddleware = require("./middlewares/error-middleware");
 
-const PORT = 5000;
+dotenv.config();
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
 app.use(express.json());
-app.use(cookieparser());
+app.use(cookieParser());
 app.use(cors({ origin: "*" }));
 app.use("/api", authRouter);
+app.use(errorsMiddleware);
 
 const start = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://root:root@cluster0.t4gqilo.mongodb.net/?retryWrites=true&w=majority",
-      { useNewUrlParser: true, useUnifiedTopology: true }
-    );
+    await mongoose.connect(process.env.DB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
     });
