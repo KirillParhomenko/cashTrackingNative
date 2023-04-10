@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text } from "react-native";
 
-export const ARButton = ({ children, style, icon }) => {
+export const ARButton = ({ children, style, icon, onClick }) => {
   return (
     <TouchableOpacity
       style={{

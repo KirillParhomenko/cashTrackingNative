@@ -8,11 +8,26 @@ import {
   ScrollView,
 } from "react-native";
 
-import { ARButton } from "./UI/Button";
-
 import styled from "styled-components/native";
 
+import { ARButton } from "./UI/Button";
+import { useAuthStore } from "../store/auth-store";
+import { useState } from "react";
+
 export const Authentication = () => {
+  const { email, setEmail } = useState("");
+  const { password, setPassword } = useState("");
+  const login = useAuthStore((state) => state.login);
+  const registration = useAuthStore((state) => state.registration);
+
+  const emailHandler = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const passwordHandler = (event) => {
+    setPassword(event.target.value);
+  };
+
   return (
     <KeyboardAvoidingView behavior="content">
       <Wrapper>
@@ -57,11 +72,15 @@ export const Authentication = () => {
           </View>
           <View>
             <PreInputText>Email Address</PreInputText>
-            <Input />
+            <Input value={email} onChange={emailHandler} />
           </View>
           <View>
             <PreInputText>Password</PreInputText>
-            <Input secureTextEntry={true} />
+            <Input
+              secureTextEntry={true}
+              value={password}
+              onChange={passwordHandler}
+            />
           </View>
           <View>
             <ARButton
