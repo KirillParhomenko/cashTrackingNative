@@ -13,7 +13,7 @@ router.post(
   userController.signup
 );
 router.post("/logout", userController.logout);
-router.get("/refresh", userController.refresh);
+router.post("/refresh", userController.refresh);
 router.get("/activate/:link", userController.activate);
 router.get("/getUsers", authMiddlerware, userController.getUsers);
 

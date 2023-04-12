@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text } from "react-native";
 
-export const ARButton = ({ children, style, icon, onClick }) => {
+export const ARButton = ({ children, style, icon, onPressHandler }) => {
   return (
     <TouchableOpacity
       style={{
@@ -12,6 +12,7 @@ export const ARButton = ({ children, style, icon, onClick }) => {
         justifyContent: "center",
         alignSelf: "center",
       }}
+      onPress={onPressHandler}
     >
       {icon}
       <Text

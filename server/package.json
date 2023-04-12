@@ -9,6 +9,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios-auth-refresh": "^3.3.6",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -20,6 +21,7 @@
     "mongoose": "^7.0.3",
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.22",
+    "react-native-keychain": "^8.1.1",
     "uuid": "^9.0.0"
   }
 }

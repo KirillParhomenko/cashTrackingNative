@@ -17,10 +17,6 @@ class UserController {
       const userDto = new UserDto(user);
       const token = await tokenService.updateToken(userDto);
       emailService.sendMail(email, user.activationLink);
-      res.cookie("refreshToken", token.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
       return res.status(201).json({
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
@@ -36,10 +32,6 @@ class UserController {
       const { email, password } = req.body;
       const user = await userService.signin(email, password);
       const tokens = await tokenService.updateToken(user);
-      res.cookie("refreshToken", tokens.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
       return res.status(200).send({
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
@@ -52,7 +44,7 @@ class UserController {
 
   refresh = async (req, res, next) => {
     try {
-      const { refreshToken } = req.cookies;
+      const { refreshToken } = req.body;
       const newAccessToken = await tokenService.refreshAccessToken(
         refreshToken
       );
@@ -68,11 +60,9 @@ class UserController {
 
   logout = async (req, res, next) => {
     try {
-      const { refreshToken } = req.cookies;
+      const { refreshToken } = req.body;
       const token = await tokenService.logout(refreshToken);
-      console.log("re");
       res.clearCookie("refreshToken");
-      console.log("rere");
       return res.status(200).json(token);
     } catch (e) {
       next(e);

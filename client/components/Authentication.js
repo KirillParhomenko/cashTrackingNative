@@ -12,21 +12,13 @@ import styled from "styled-components/native";
 
 import { ARButton } from "./UI/Button";
 import { useAuthStore } from "../store/auth-store";
-import { useState } from "react";
+import React from "react";
 
 export const Authentication = () => {
-  const { email, setEmail } = useState("");
-  const { password, setPassword } = useState("");
-  const login = useAuthStore((state) => state.login);
-  const registration = useAuthStore((state) => state.registration);
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-  const emailHandler = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const passwordHandler = (event) => {
-    setPassword(event.target.value);
-  };
+  const { registration } = useAuthStore((state) => state);
 
   return (
     <KeyboardAvoidingView behavior="content">
@@ -72,14 +64,14 @@ export const Authentication = () => {
           </View>
           <View>
             <PreInputText>Email Address</PreInputText>
-            <Input value={email} onChange={emailHandler} />
+            <Input value={email} onChangeText={(email) => setEmail(email)} />
           </View>
           <View>
             <PreInputText>Password</PreInputText>
             <Input
               secureTextEntry={true}
               value={password}
-              onChange={passwordHandler}
+              onChangeText={(password) => setPassword(password)}
             />
           </View>
           <View>
@@ -92,6 +84,7 @@ export const Authentication = () => {
                 color: "white",
                 bc: "#9c4aff",
               }}
+              onPressHandler={()=>{registration(email,password)}}
             >
               SIGN IN
             </ARButton>
