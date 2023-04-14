@@ -32,7 +32,7 @@ class UserController {
       const { email, password } = req.body;
       const user = await userService.signin(email, password);
       const tokens = await tokenService.updateToken(user);
-      return res.status(200).send({
+      return res.status(200).json({
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
         user,
@@ -62,7 +62,6 @@ class UserController {
     try {
       const { refreshToken } = req.body;
       const token = await tokenService.logout(refreshToken);
-      res.clearCookie("refreshToken");
       return res.status(200).json(token);
     } catch (e) {
       next(e);

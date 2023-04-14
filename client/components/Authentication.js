@@ -15,10 +15,10 @@ import { useAuthStore } from "../store/auth-store";
 import React from "react";
 
 export const Authentication = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("kirya.parxomenko@gmail.com");
+  const [password, setPassword] = React.useState("somebodyknow1");
 
-  const { registration } = useAuthStore((state) => state);
+  const onLogin = useAuthStore((state) => state.login);
 
   return (
     <KeyboardAvoidingView behavior="content">
@@ -84,7 +84,9 @@ export const Authentication = () => {
                 color: "white",
                 bc: "#9c4aff",
               }}
-              onPressHandler={()=>{registration(email,password)}}
+              onPressHandler={() => {
+                onLogin(email, password);
+              }}
             >
               SIGN IN
             </ARButton>

@@ -3,16 +3,17 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as Keychain from "react-native-keychain";
 import { useAuthStore } from "../store/auth-store";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "http://192.168.100.43:5000/api";
 
-const apiInstance = axios.create({ baseURL: API_URL });
+export const apiAuthInstance = axios.create({ baseURL: API_URL });
+
+export const apiInstance = axios.create({ baseURL: API_URL });
 
 apiInstance.interceptors.request.use(
   (config) => {
     config.headers.Authorization = `Bearer ${useAuthStore((state) =>
       state.getAccessToken()
     )}`;
-    console.log('inside interceptor request')
     return config;
   },
   (error) => {
@@ -68,4 +69,3 @@ const refreshAuthLogic = async (failedRequest) => {
 
 createAuthRefreshInterceptor(apiInstance, refreshAuthLogic, {});
 
-export default apiInstance;
