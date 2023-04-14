@@ -10,15 +10,16 @@ import {
 
 import styled from "styled-components/native";
 
-import { ARButton } from "./UI/Button";
-import { useAuthStore } from "../store/auth-store";
+import { ARButton } from "../UI/Button";
+import { useAuthStore } from "../../store/auth-store";
 import React from "react";
 
-export const Authentication = () => {
-  const [email, setEmail] = React.useState("kirya.parxomenko@gmail.com");
-  const [password, setPassword] = React.useState("somebodyknow1");
+export const Signup = ({ navigation }) => {
+  const [fullName, setFullName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-  const onLogin = useAuthStore((state) => state.login);
+  const onRegistration = useAuthStore((state) => state.registration);
 
   return (
     <KeyboardAvoidingView behavior="content">
@@ -33,7 +34,7 @@ export const Authentication = () => {
                 fontWeight: "700",
               }}
             >
-              Welcome back!
+              Registration
             </Text>
             <View
               style={{
@@ -48,19 +49,32 @@ export const Authentication = () => {
                   fontSize: 15,
                 }}
               >
-                Don't have an account?
+                I'm already a member.
               </PreInputText>
-              <PreInputText
-                style={{
-                  marginLeft: 0,
-                  fontSize: 15,
-                  color: "#2E4181",
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SignIn");
                 }}
               >
-                {" "}
-                Register
-              </PreInputText>
+                <PreInputText
+                  style={{
+                    marginLeft: 0,
+                    fontSize: 15,
+                    color: "#2E4181",
+                    fontWeight: "700",
+                  }}
+                >
+                  Sign in
+                </PreInputText>
+              </TouchableOpacity>
             </View>
+          </View>
+          <View>
+            <PreInputText>Full name</PreInputText>
+            <Input
+              value={fullName}
+              onChangeText={(fullName) => setFullName(fullName)}
+            />
           </View>
           <View>
             <PreInputText>Email Address</PreInputText>
@@ -85,10 +99,10 @@ export const Authentication = () => {
                 bc: "#9c4aff",
               }}
               onPressHandler={() => {
-                onLogin(email, password);
+                onRegistration(email, password, fullName);
               }}
             >
-              SIGN IN
+              SIGN UP
             </ARButton>
             <PreInputText
               style={{

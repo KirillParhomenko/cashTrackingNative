@@ -4,7 +4,7 @@ const UserModel = require("./../models/user-model");
 const ApiErrors = require("./../exceptions/api-error");
 
 class UserService {
-  signup = async (email, password) => {
+  signup = async (email, password, fullName) => {
     const isUserAvailable = await UserModel.findOne({ email });
     if (isUserAvailable) {
       throw ApiErrors.BadRequest(`User is available with email = ${email}`);
@@ -12,6 +12,7 @@ class UserService {
     const hashedPassword = await bcryptjs.hash(password, 3);
     const activationLink = uuid.v4();
     const newUser = await UserModel.create({
+      fullName,
       email,
       password: hashedPassword,
       activationLink,
@@ -21,6 +22,7 @@ class UserService {
       id: newUser._id,
       email: newUser.email,
       isActivated: newUser.isActivated,
+      fullName: newUser.fullName,
     };
   };
 
@@ -37,6 +39,7 @@ class UserService {
       id: user._id,
       email: user.email,
       isActivated: user.isActivated,
+      fullName: user.fullName,
     };
   };
 

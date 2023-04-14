@@ -3,11 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 
 import styled from "styled-components/native";
 
-import { Authentication } from "./components/Authentication";
 import { useAuthStore } from "./store/auth-store";
 import { MainTest } from "./components/MainTest";
 import { useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
+import { Signin } from "./components/authentification/Signin";
+import { Signup } from "./components/authentification/Signup";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export default function App() {
   const isLogin = useAuthStore((state) => state.userAuthInformation.isLogin);
@@ -24,10 +27,27 @@ export default function App() {
     takeTokens();
   }, []);
 
+  const Stack = createNativeStackNavigator();
+
   return (
-    <View>
-      {!isLogin && <Authentication />}
-      {isLogin && <MainTest />}
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        {!isLogin && (
+          <>
+            <Stack.Screen name="SignIn" component={Signin} />
+            <Stack.Screen name="SignUp" component={Signup} />
+          </>
+        )}
+        {isLogin && (
+          <>
+            <Stack.Screen name="Main" component={MainTest} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

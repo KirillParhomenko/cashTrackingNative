@@ -5,12 +5,12 @@ const ApiErrors = require("./../exceptions/api-error");
 class TokenService {
   updateToken = async (user) => {
     const refreshToken = jwt.sign(
-      { user_id: user.id, email: user.email },
+      { user_id: user.id, email: user.email, fullName: user.fullName },
       process.env.SECRET_JWT_KEY,
       { expiresIn: "30d" }
     );
     const accessToken = jwt.sign(
-      { user_id: user.id, email: user.email },
+      { user_id: user.id, email: user.email, fullName: user.fullName },
       process.env.SECRET_JWT_KEY,
       { expiresIn: "15m" }
     );
@@ -39,6 +39,7 @@ class TokenService {
         {
           user_id: verifyRefreshToken.user_id,
           email: verifyRefreshToken.email,
+          fullName: verifyRefreshToken.fullName,
         },
         process.env.SECRET_JWT_KEY,
         { expiresIn: "15m" }

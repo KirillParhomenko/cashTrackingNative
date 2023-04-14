@@ -12,8 +12,8 @@ class UserController {
       if (!errors.isEmpty()) {
         return next(ApiError.BadRequest("Validation error"), errors.array());
       }
-      const { email, password } = req.body;
-      const user = await userService.signup(email, password);
+      const { email, password, fullName } = req.body;
+      const user = await userService.signup(email, password, fullName);
       const userDto = new UserDto(user);
       const token = await tokenService.updateToken(userDto);
       emailService.sendMail(email, user.activationLink);
@@ -51,7 +51,11 @@ class UserController {
       return res.status(200).json({
         accessToken: newAccessToken.accessToken,
         refreshToken,
-        user: { id: newAccessToken.id, email: newAccessToken.email },
+        user: {
+          id: newAccessToken.id,
+          email: newAccessToken.email,
+          fullName: newAccessToken.fullName,
+        },
       });
     } catch (e) {
       next(e);

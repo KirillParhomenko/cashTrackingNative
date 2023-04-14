@@ -3,7 +3,7 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as Keychain from "react-native-keychain";
 import { useAuthStore } from "../store/auth-store";
 
-const API_URL = "http://192.168.100.43:5000/api";
+const API_URL = "http://192.168.142.64:5000/api";
 
 export const apiAuthInstance = axios.create({ baseURL: API_URL });
 
@@ -31,7 +31,7 @@ const refreshAuthLogic = async (failedRequest) => {
   const options = {
     method: "POST",
     data,
-    url: "http://localhost:5000/api/refresh",
+    url: "http://192.168.142.64/api/refresh",
   };
 
   return axios(options)

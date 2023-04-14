@@ -29,8 +29,8 @@ export const useAuthStore = create((set, get) => ({
     }));
   },
 
-  registration: async (email, password) => {
-    const res = signup(email, password);
+  registration: async (email, password, fullName) => {
+    const res = signup(email, password, fullName);
     if (res instanceof Error) {
       set((state) => ({ error: { status: res.status, message: res.message } }));
     }

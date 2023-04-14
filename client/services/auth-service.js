@@ -1,9 +1,9 @@
 import { apiAuthInstance } from "../http";
 import * as SecureStore from "expo-secure-store";
 
-export const signup = async (email, password) => {
+export const signup = async (email, password, fullName) => {
   try {
-    const response = await apiAuthInstance.post("/signup", { email, password });
+    const response = await apiAuthInstance.post("/signup", { email, password, fullName });
 
     const responseData = response.data;
     const tokens = {
