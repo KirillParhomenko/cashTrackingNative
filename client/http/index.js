@@ -1,9 +1,9 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
-import * as Keychain from "react-native-keychain";
+import * as SecureStore from "expo-secure-store";
 import { useAuthStore } from "../store/auth-store";
 
-const API_URL = "http://192.168.142.64:5000/api";
+const API_URL = "http://192.168.100.43:5000/api";
 
 export const apiAuthInstance = axios.create({ baseURL: API_URL });
 
@@ -31,7 +31,7 @@ const refreshAuthLogic = async (failedRequest) => {
   const options = {
     method: "POST",
     data,
-    url: "http://192.168.142.64/api/refresh",
+    url: "http://192.168.100.43/api/refresh",
   };
 
   return axios(options)
@@ -44,13 +44,11 @@ const refreshAuthLogic = async (failedRequest) => {
         })
       );
 
-      await Keychain.setGenericPassword(
+      await SecureStore.setItemAsync(
         "token",
         JSON.stringify({
           accessToken: accessTokenResponse.data.accessToken,
-          refreshToken: useAuthStore(
-            (state) => state.userAuthInformation.refreshToken
-          ),
+          ...data,
         })
       );
 
@@ -68,4 +66,3 @@ const refreshAuthLogic = async (failedRequest) => {
 };
 
 createAuthRefreshInterceptor(apiInstance, refreshAuthLogic, {});
-

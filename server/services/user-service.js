@@ -23,17 +23,18 @@ class UserService {
       email: newUser.email,
       isActivated: newUser.isActivated,
       fullName: newUser.fullName,
+      activationLink,
     };
   };
 
   signin = async (email, password) => {
     const user = await UserModel.findOne({ email });
     if (!user) {
-      throw ApiErrors.BadRequest(`No user with this email = ${email}`);
+      throw ApiErrors.BadRequest(`No user with email = ${email}`);
     }
     const isPasswordEquals = await bcryptjs.compare(password, user.password);
     if (!isPasswordEquals) {
-      throw ApiErrors.BadRequest("Incorrect email or password!");
+      throw ApiErrors.BadRequest("Incorrect password!");
     }
     return {
       id: user._id,

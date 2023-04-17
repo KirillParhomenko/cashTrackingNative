@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { logout, signin, signup } from "../services/auth-service";
+import { AxiosError } from "axios";
 
 export const useAuthStore = create((set, get) => ({
   userAuthInformation: {
@@ -15,41 +16,61 @@ export const useAuthStore = create((set, get) => ({
 
   login: async (email, password) => {
     const res = await signin(email, password);
-
-    if (res instanceof Error) {
-      set((state) => ({ error: { status: res.status, message: res.message } }));
-      return;
+    if (res instanceof AxiosError) {
+      set((state) => ({
+        error: {
+          status: res?.response?.status,
+          message: res?.response?.data?.message,
+        },
+      }));
+    } else {
+      set((state) => ({
+        userAuthInformation: {
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+          isLogin: res.accessToken !== null,
+        },
+      }));
     }
-    set((state) => ({
-      userAuthInformation: {
-        accessToken: res.accessToken,
-        refreshToken: res.refreshToken,
-        isLogin: res.accessToken !== null,
-      },
-    }));
   },
 
   registration: async (email, password, fullName) => {
-    const res = signup(email, password, fullName);
-    if (res instanceof Error) {
-      set((state) => ({ error: { status: res.status, message: res.message } }));
+    const res = await signup(email, password, fullName);
+
+    if (res instanceof AxiosError) {
+      set((state) => ({
+        error: {
+          status: res?.response?.status,
+          message: res?.response?.data?.message,
+        },
+      }));
+    } else {
+      set((state) => ({
+        userAuthInformation: {
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+          isLogin: res.accessToken !== null,
+        },
+      }));
     }
-    set((state) => ({
-      userAuthInformation: {
-        accessToken: res.accessToken,
-        refreshToken: res.refreshToken,
-        isLogin: res.accessToken !== null,
-      },
-    }));
   },
 
   logout: async () => {
     const res = await logout(get().userAuthInformation.refreshToken);
 
-    if (res instanceof Error) {
-      set((state) => ({ error: { status: res.status, message: res.message } }));
+    if (res instanceof AxiosError) {
+      set((state) => ({
+        error: {
+          status: res.repsonse.status,
+          message: res.response.data.message,
+        },
+      }));
+      return;
     }
 
+    get((state) => {
+      state.clearError();
+    });
     set((state) => ({
       userAuthInformation: {
         accessToken: null,
@@ -70,5 +91,9 @@ export const useAuthStore = create((set, get) => ({
           information?.accessToken !== (null || undefined),
       },
     }));
+  },
+
+  clearError: () => {
+    set((state) => ({ error: { status: null, message: null } }));
   },
 }));

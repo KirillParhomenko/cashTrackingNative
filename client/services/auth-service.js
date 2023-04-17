@@ -3,7 +3,11 @@ import * as SecureStore from "expo-secure-store";
 
 export const signup = async (email, password, fullName) => {
   try {
-    const response = await apiAuthInstance.post("/signup", { email, password, fullName });
+    const response = await apiAuthInstance.post("/signup", {
+      email,
+      password,
+      fullName,
+    });
 
     const responseData = response.data;
     const tokens = {
@@ -15,7 +19,7 @@ export const signup = async (email, password, fullName) => {
 
     return tokens;
   } catch (error) {
-    return error.response;
+    return error;
   }
 };
 
@@ -34,7 +38,7 @@ export const signin = async (email, password) => {
 
     return tokens;
   } catch (error) {
-    return error.response;
+    return error;
   }
 };
 
@@ -48,6 +52,6 @@ export const logout = async (refreshToken) => {
 
     return responseData;
   } catch (error) {
-    return error.response;
+    return error;
   }
 };

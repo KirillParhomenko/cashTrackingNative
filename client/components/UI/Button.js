@@ -9,6 +9,7 @@ export const ARButton = ({ children, style, icon, onPressHandler }) => {
         borderRadius: 10,
         backgroundColor: style.bc,
         borderColor: style.borderColor,
+        borderWidth: style.borderColor ? 1 : null,
         justifyContent: "center",
         alignSelf: "center",
       }}
