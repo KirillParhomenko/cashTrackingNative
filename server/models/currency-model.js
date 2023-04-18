@@ -4,6 +4,7 @@ const Currency = model(
   "Currency",
   new Schema({
     name: { type: String, required: true },
+    abbreviation: { type: String, required: true },
   })
 );
 
