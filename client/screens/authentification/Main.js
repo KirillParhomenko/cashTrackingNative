@@ -1,10 +1,14 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
 import styled from "styled-components/native";
 
-import { ARButton } from "../UI/Button";
+import { ARButton } from "../../components/UI/Button";
+import { signinWithoutAuth } from "../../services/auth-service";
+import { useAuthStore } from "../../store/auth-store";
+import { useQuery } from "@tanstack/react-query";
 
 export const AuthentificationMain = ({ navigation }) => {
+  const setWithoutAuth = useAuthStore((state) => state.setUserWithoutAuth);
   return (
     <Wrapper>
       <View style={{ width: "80%", alignSelf: "center" }}>
@@ -51,6 +55,17 @@ export const AuthentificationMain = ({ navigation }) => {
         >
           SIGN IN
         </ARButton>
+        <TouchableOpacity
+          style={{ alignSelf: "center" }}
+          onPress={() => {
+            signinWithoutAuth();
+            setWithoutAuth();
+          }}
+        >
+          <Text style={{ fontSize: 15, fontWeight: 600, color: "#2E4181" }}>
+            Continue use app without authorization
+          </Text>
+        </TouchableOpacity>
       </View>
     </Wrapper>
   );

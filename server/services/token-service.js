@@ -5,18 +5,18 @@ const ApiErrors = require("./../exceptions/api-error");
 class TokenService {
   updateToken = async (user) => {
     const refreshToken = jwt.sign(
-      { user_id: user.id, email: user.email, fullName: user.fullName },
+      { _user: user.id, email: user.email, fullName: user.fullName },
       process.env.SECRET_JWT_KEY,
       { expiresIn: "30d" }
     );
     const accessToken = jwt.sign(
-      { user_id: user.id, email: user.email, fullName: user.fullName },
+      { _user: user.id, email: user.email, fullName: user.fullName },
       process.env.SECRET_JWT_KEY,
-      { expiresIn: "15m" }
+      { expiresIn: "30d" }
     );
 
     const token = await Token.create({
-      user_id: user.id,
+      _user: user.id,
       refreshToken,
     });
 
@@ -33,11 +33,11 @@ class TokenService {
       throw ApiErrors.BadRequest("Invalid refresh token!");
     }
     return {
-      id: verifyRefreshToken.user_id,
+      id: verifyRefreshToken._user,
       email: verifyRefreshToken.email,
       accessToken: jwt.sign(
         {
-          user_id: verifyRefreshToken.user_id,
+          user_id: verifyRefreshToken._user,
           email: verifyRefreshToken.email,
           fullName: verifyRefreshToken.fullName,
         },

@@ -11,10 +11,11 @@ import {
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { ARButton } from "../UI/Button";
+import { ARButton } from "../../components/UI/Button";
 import { useAuthStore } from "../../store/auth-store";
 import React, { useEffect } from "react";
 import Toast from "react-native-toast-message";
+import { useCashStore } from "../../store/cash-store";
 
 export const Signup = ({ navigation }) => {
   const [fullName, setFullName] = React.useState("Kirill Parhomenko");
@@ -28,6 +29,9 @@ export const Signup = ({ navigation }) => {
   const onRegistration = useAuthStore((state) => state.registration);
   const authError = useAuthStore((state) => state.error);
   const authErrorClear = useAuthStore((state) => state.clearError);
+  const updateLocalInformation = useCashStore(
+    (state) => state.updateLocalInformation
+  );
 
   useEffect(() => {
     if (authError.message !== null) {
@@ -76,14 +80,16 @@ export const Signup = ({ navigation }) => {
     };
   }, [password]);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (isEmailValid && isPasswordValid && isFullNameValid) {
-      onRegistration(email, password, fullName);
+      const userId = await onRegistration(email, password, fullName);
+      await updateLocalInformation(userId);
     }
   };
 
-  const showPasswordToggle = () => {
+  const showPasswordToggle = async () => {
     setShowPassword(!showPassword);
+    await updateLocalInformation(userInfo.id);
   };
 
   return (

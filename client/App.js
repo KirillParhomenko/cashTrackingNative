@@ -1,63 +1,58 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
-import styled from "styled-components/native";
-
-import { useAuthStore } from "./store/auth-store";
-import { MainTest } from "./components/MainTest";
-import { useEffect } from "react";
-import * as SecureStore from "expo-secure-store";
-import { Signin } from "./components/authentification/Signin";
-import { Signup } from "./components/authentification/Signup";
+import Navigation from "./navigation/Navigation";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthentificationMain } from "./components/authentification/Main";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "./components/toastConfig";
+import { PortalProvider } from "@gorhom/portal";
 
-export default function App() {
+import { useAuthStore } from "./store/auth-store";
+import { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getBalanceAccounts } from "./services/cash-service";
+import { useCashStore } from "./store/cash-store";
+
+function App() {
   const isLogin = useAuthStore((state) => state.userAuthInformation.isLogin);
   const setAuthData = useAuthStore((state) => state.setUserAuthInformation);
-  const data = useAuthStore((state) => state.userAuthInformation);
+  const authData = useAuthStore((state) => state.userAuthInformation);
+  const setWithoutAuth = useAuthStore((state) => state.setUserWithoutAuth);
+  const [isLoading, setIsLoading] = useState(true);
+  const isLoadingUpdateData = useCashStore((state) => state.isLoading);
+  const updateStoreInformation = useCashStore(
+    (state) => state.updateStoreInformation
+  );
 
+  const category = useCashStore((state) => state.cashInformation.categories);
+  console.log(category);
   useEffect(() => {
     const takeTokens = async () => {
-      const token = await SecureStore.getItemAsync("token");
+      const token = JSON.parse(await SecureStore.getItemAsync("token"));
+      const userInfo = JSON.parse(await AsyncStorage.getItem("@authInfo"));
       if (token) {
-        setAuthData(JSON.parse(token));
+        if ("accessToken" in token && "refreshToken" in token && userInfo) {
+          const data = { ...token, user: userInfo };
+          setAuthData(data);
+          if (isLogin) {
+            await updateStoreInformation();
+          }
+        }
+        if ("withoutAuth" in token) {
+          setWithoutAuth();
+        }
       }
+      setIsLoading(false);
     };
+
     takeTokens();
-  }, []);
-
-  const Stack = createNativeStackNavigator();
-
+  }, [isLogin]);
   return (
-    <>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          {!isLogin && (
-            <>
-              <Stack.Screen
-                name="AuthentificationHome"
-                component={AuthentificationMain}
-              />
-              <Stack.Screen name="SignIn" component={Signin} />
-              <Stack.Screen name="SignUp" component={Signup} />
-            </>
-          )}
-          {isLogin && (
-            <>
-              <Stack.Screen name="Main" component={MainTest} />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-      <Toast config={toastConfig} />
-    </>
+    <PortalProvider>
+      <Navigation
+        isLoading={isLoading || isLoadingUpdateData}
+        isLogin={isLogin}
+      />
+    </PortalProvider>
   );
 }
+
+export default App;

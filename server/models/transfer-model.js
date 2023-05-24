@@ -3,18 +3,20 @@ const { model, Schema } = require("mongoose");
 const Transfer = model(
   "Transfer",
   new Schema({
-    user_id: { type: Schema.Types.ObjectId, ref: "User" },
-    recipient: {
+    _user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    _recipient: {
       type: Schema.Types.ObjectId,
-      ref: "Count",
+      ref: "BalanceAccount",
       required: true,
     },
-    sender: {
+    _sender: {
       type: Schema.Types.ObjectId,
-      ref: "Count",
+      ref: "BalanceAccount",
       required: true,
     },
-    price: { type: BigInt, required: true },
+    price: { type: Number, required: true },
     date: { type: Date, required: true },
   })
 );
+
+module.exports = Transfer;

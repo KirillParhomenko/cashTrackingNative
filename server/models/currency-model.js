@@ -5,6 +5,11 @@ const Currency = model(
   new Schema({
     name: { type: String, required: true },
     abbreviation: { type: String, required: true },
+    symbol: { type: String, required: true },
+    convert: {
+      type: Number,
+      required: true,
+    },
   })
 );
 

@@ -1,18 +1,18 @@
 const { model, Schema } = require("mongoose");
 
-const Count = model(
-  "Count",
+const BalanceAccount = model(
+  "BalanceAccount",
   new Schema({
-    user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    _user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     name: { type: String, required: true },
-    currency_id: {
+    _currency: {
       type: Schema.Types.ObjectId,
       ref: "Currency",
       required: true,
     },
-    balance: { type: BigInt },
+    balance: { type: Number, default: 0 },
     isConsiderInGeneralBalance: { type: Boolean, required: true },
   })
 );
 
-module.exports = Count;
+module.exports = BalanceAccount;

@@ -11,21 +11,24 @@ import {
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { ARButton } from "../UI/Button";
+import { ARButton } from "../../components/UI/Button";
 import { useAuthStore } from "../../store/auth-store";
 import React, { useEffect } from "react";
 import Toast from "react-native-toast-message";
+import { useCashStore } from "../../store/cash-store";
 
 export const Signin = ({ navigation }) => {
-  const [email, setEmail] = React.useState("rewrwerwer@gmail.com");
-  const [password, setPassword] = React.useState("asdfasfsa");
+  const [email, setEmail] = React.useState("kirya.parxomenko@gmail.com");
+  const [password, setPassword] = React.useState("somebodyknow1");
   const [showPassword, setShowPassword] = React.useState(false);
   const [isEmailValid, setIsEmailValid] = React.useState(null);
   const [isPasswordValid, setIsPasswordValid] = React.useState(null);
-
   const onLogin = useAuthStore((state) => state.login);
   const authError = useAuthStore((state) => state.error);
   const authErrorClear = useAuthStore((state) => state.clearError);
+  const updateLocalInformation = useCashStore(
+    (state) => state.updateLocalInformation
+  );
 
   useEffect(() => {
     if (authError.message !== null) {
@@ -66,9 +69,10 @@ export const Signin = ({ navigation }) => {
     setShowPassword(!showPassword);
   };
 
-  const onSubmitAuthentification = () => {
+  const onSubmitAuthentification = async () => {
     if (isEmailValid && isPasswordValid) {
-      onLogin(email, password);
+      const userId = await onLogin(email, password);
+      await updateLocalInformation(userId);
     }
   };
 

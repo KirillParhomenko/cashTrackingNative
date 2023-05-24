@@ -17,4 +17,5 @@ router.post("/refresh", userController.refresh);
 router.get("/activate/:link", userController.activate);
 router.get("/getUsers", authMiddlerware, userController.getUsers);
 
+
 module.exports = router;
