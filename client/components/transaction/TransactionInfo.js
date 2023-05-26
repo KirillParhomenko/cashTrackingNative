@@ -4,7 +4,6 @@ import Header from "./../header/Header";
 import { useCashStore } from "../../store/cash-store";
 
 const TransactionInfo = ({ route }) => {
-  console.log(route?.params);
   const deleteTransaction = useCashStore((state) => state.deleteTransaction);
 
   return (
@@ -25,7 +24,10 @@ const TransactionInfo = ({ route }) => {
       <View style={{ height: "100%", width: "90%", alignSelf: "center" }}>
         <ViewItem>
           <TitleText>Сумма</TitleText>
-          <InfoText>{route?.params?.price} руб.</InfoText>
+          <InfoText>
+            {route?.params?.price.toFixed(1) + " "}
+            {route?.params?._balanceAccount?._currency?.abbreviation}
+          </InfoText>
         </ViewItem>
         <ViewItem>
           <TitleText>Счет</TitleText>

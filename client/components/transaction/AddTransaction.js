@@ -1,4 +1,10 @@
-import { View, TextInput, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+} from "react-native";
 import CurrentCurency from "./currency/CurrentCurrency";
 import PickerItems from "../picker/PickerItems";
 import { useEffect, useState } from "react";
@@ -96,7 +102,7 @@ const AddTransaction = ({ navigation }) => {
         alignContent: "center",
       }}
     >
-      <Header height={100} heightBackground={100}>
+      <Header height={100} heightBackground={110}>
         <View
           style={{
             flexDirection: "row",
@@ -142,199 +148,346 @@ const AddTransaction = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </Header>
-      <TouchableOpacity
-        style={{ flexDirection: "row", alignItems: "center", marginTop: 20 }}
-        onPress={() => {
-          onBalanceAccountShowPicker();
-        }}
-      >
-        {Object.keys(pickedBalanceAccount).length !== 0 ? (
-          <>
-            <Text style={{ fontSize: 20, fontWeight: 400, marginLeft: 20 }}>
-              {pickedBalanceAccount.name}
-            </Text>
-          </>
-        ) : (
-          <Text style={{ fontSize: 20, fontWeight: 600, color: "#676767" }}>
-            Выбрать счет.
-          </Text>
-        )}
-      </TouchableOpacity>
-      <View
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{
-          flexDirection: "row",
+          width: "100%",
           alignSelf: "center",
-          alignItems: "center",
+          paddingLeft: 20,
+          paddingRight: 20,
         }}
       >
-        <TextInput
-          keyboardType="numeric"
-          maxLength={20}
-          defaultValue={balanceValue !== 0 ? balanceValue.toString() : ""}
-          placeholder="0"
+        <TouchableOpacity
           style={{
-            borderBottomWidth: 1,
-            width: 120,
-            fontSize: 30,
-            textAlign: "center",
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 30,
+            marginBottom: 30,
           }}
-          onChangeText={(newBalance) => {
-            changeBalanceValue(newBalance.replace(/[^0-9\.]/g, ""));
+          onPress={() => {
+            onBalanceAccountShowPicker();
           }}
-        />
-        <CurrentCurency
-          navigation={navigation}
-          initialCurrency={pickedBalanceAccount._currency}
-          pickedCurrency={convertTo}
-          changeConvertTo={changeConvertTo}
-        />
-        {Object.keys(convertTo).length !== 0 && (
-          <>
-            <Text
-              style={{
-                fontSize: 30,
-                textAlign: "center",
-                marginLeft: 10,
-                marginRight: 10,
-              }}
-            >
-              =
+        >
+          {Object.keys(pickedBalanceAccount).length !== 0 ? (
+            <>
+              <Text style={{ fontSize: 20, fontWeight: 600, color: "#676767" }}>
+                Счет:
+              </Text>
+              <Text style={{ fontSize: 20, fontWeight: 400, marginLeft: 10 }}>
+                {pickedBalanceAccount.name}
+              </Text>
+            </>
+          ) : (
+            <Text style={{ fontSize: 20, fontWeight: 600, color: "#676767" }}>
+              Выбрать счет.
             </Text>
-            <Text
-              style={{
-                borderBottomWidth: 1,
-                width: 120,
-                fontSize: 30,
-                textAlign: "center",
-              }}
-              numberOfLines={1}
-            >
-              {transactionBalance.toFixed(2)}
-            </Text>
-            <Text style={{ fontSize: 25, fontWeight: 600, color: "#676767" }}>
-              {pickedBalanceAccount._currency.abbreviation}
-            </Text>
-          </>
-        )}
-      </View>
-      <View>
+          )}
+        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            alignSelf: "center",
+            alignItems: "center",
+            marginBottom: 30,
+          }}
+        >
+          <TextInput
+            keyboardType="numeric"
+            maxLength={20}
+            defaultValue={balanceValue !== 0 ? balanceValue.toString() : ""}
+            placeholder="0"
+            style={{
+              borderBottomWidth: 1,
+              width: 100,
+              fontSize: 30,
+              textAlign: "center",
+            }}
+            onChangeText={(newBalance) => {
+              changeBalanceValue(newBalance.replace(/[^0-9\.]/g, ""));
+            }}
+          />
+          <CurrentCurency
+            navigation={navigation}
+            initialCurrency={pickedBalanceAccount._currency}
+            pickedCurrency={convertTo}
+            changeConvertTo={changeConvertTo}
+          />
+          {Object.keys(convertTo).length !== 0 && (
+            <>
+              <Text
+                style={{
+                  fontSize: 30,
+                  textAlign: "center",
+                  marginLeft: 10,
+                  marginRight: 10,
+                }}
+              >
+                =
+              </Text>
+              <Text
+                style={{
+                  borderBottomWidth: 1,
+                  width: 100,
+                  fontSize: 30,
+                  textAlign: "center",
+                }}
+                numberOfLines={1}
+              >
+                {transactionBalance.toFixed(2)}
+              </Text>
+              <Text style={{ fontSize: 25, fontWeight: 600, color: "#676767" }}>
+                {pickedBalanceAccount._currency.abbreviation}
+              </Text>
+            </>
+          )}
+        </View>
+        <View style={{ marginBottom: 30 }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 400,
+              marginBottom: 5,
+              alignSelf: "center",
+            }}
+          >
+            Категории
+          </Text>
+          <Categories
+            isSpending={isSpending}
+            setTransaction={changeTransactionCategory}
+            transactionCategory={transactionCategory}
+          />
+        </View>
         <Text
           style={{
             fontSize: 20,
             fontWeight: 400,
-            marginLeft: 20,
-            marginBottom: 20,
+            marginBottom: 5,
+            alignSelf: "center",
           }}
         >
-          Категории
+          Дата
         </Text>
-        <Categories
-          isSpending={isSpending}
-          setTransaction={changeTransactionCategory}
-          transactionCategory={transactionCategory}
-        />
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity
-          style={
-            transactionDate.toDateString() === new Date().toDateString()
-              ? { backgroundColor: "red" }
-              : {}
-          }
-          onPress={() => {
-            setTransactionDate(new Date());
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 30,
+            backgroundColor: "#dedede",
+            borderRadius: 20,
+            padding: 15,
           }}
         >
-          <Text>
-            {new Date().toLocaleDateString("ru", {
-              month: "numeric",
-              day: "numeric",
-            })}
-          </Text>
-          <Text>Сегодня</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={
-            transactionDate.toDateString() ===
-            new Date(Date.now() - 86400000).toDateString()
-              ? { backgroundColor: "red" }
-              : {}
-          }
-          onPress={() => {
-            setTransactionDate(new Date(Date.now() - 86400000));
-          }}
-        >
-          <Text>
-            {new Date(Date.now() - 86400000).toLocaleDateString("ru", {
-              month: "numeric",
-              day: "numeric",
-            })}
-          </Text>
-          <Text>Вчера</Text>
-        </TouchableOpacity>
-        {transactionDate.toDateString() !== new Date().toDateString() &&
-          transactionDate.toDateString() !==
-            new Date(Date.now() - 86400000).toDateString() && (
-            <View
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
               style={
-                transactionDate.toDateString() !== new Date().toDateString() &&
-                transactionDate.toDateString() !==
-                  new Date(Date.now() - 86400000).toDateString()
-                  ? { backgroundColor: "red" }
-                  : {}
+                transactionDate.toDateString() === new Date().toDateString()
+                  ? {
+                      backgroundColor: "#9c4aff",
+                      alignItems: "center",
+                      padding: 5,
+                      paddingLeft: 15,
+                      paddingRight: 15,
+                      marginRight: 10,
+                      borderRadius: 10,
+                    }
+                  : {
+                      alignItems: "center",
+                      padding: 5,
+                      paddingLeft: 15,
+                      paddingRight: 15,
+                      marginRight: 10,
+                      borderRadius: 10,
+                    }
               }
+              onPress={() => {
+                setTransactionDate(new Date());
+              }}
             >
-              <Text>
-                {transactionDate.toLocaleDateString("ru", {
+              <Text
+                style={
+                  transactionDate.toDateString() === new Date().toDateString()
+                    ? { color: "white" }
+                    : { color: "black" }
+                }
+              >
+                {new Date().toLocaleDateString("ru", {
                   month: "numeric",
                   day: "numeric",
                 })}
               </Text>
-              <Text>Выбранная</Text>
-            </View>
-          )}
-        <TouchableOpacity onPress={() => showDatePicker()}>
-          <View>
-            <Icon name="date" size={30} color="black" />
+              <Text
+                style={
+                  transactionDate.toDateString() === new Date().toDateString()
+                    ? { color: "white", fontWeight: 600 }
+                    : { color: "black", fontWeight: 600 }
+                }
+              >
+                Сегодня
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                transactionDate.toDateString() ===
+                new Date(Date.now() - 86400000).toDateString()
+                  ? {
+                      backgroundColor: "#9c4aff",
+                      alignItems: "center",
+                      padding: 5,
+                      paddingLeft: 15,
+                      paddingRight: 15,
+                      marginRight: 10,
+                      borderRadius: 10,
+                    }
+                  : {
+                      alignItems: "center",
+                      padding: 5,
+                      paddingLeft: 15,
+                      paddingRight: 15,
+                      marginRight: 10,
+                      borderRadius: 10,
+                    }
+              }
+              onPress={() => {
+                setTransactionDate(new Date(Date.now() - 86400000));
+              }}
+            >
+              <Text
+                style={
+                  transactionDate.toDateString() ===
+                  new Date(Date.now() - 86400000).toDateString()
+                    ? { color: "white" }
+                    : { color: "black" }
+                }
+              >
+                {new Date(Date.now() - 86400000).toLocaleDateString("ru", {
+                  month: "numeric",
+                  day: "numeric",
+                })}
+              </Text>
+              <Text
+                style={
+                  transactionDate.toDateString() ===
+                  new Date(Date.now() - 86400000).toDateString()
+                    ? { color: "white", fontWeight: 600 }
+                    : { color: "black", fontWeight: 600 }
+                }
+              >
+                Вчера
+              </Text>
+            </TouchableOpacity>
+            {transactionDate.toDateString() !== new Date().toDateString() &&
+              transactionDate.toDateString() !==
+                new Date(Date.now() - 86400000).toDateString() && (
+                <View
+                  style={
+                    transactionDate.toDateString() !==
+                      new Date().toDateString() &&
+                    transactionDate.toDateString() !==
+                      new Date(Date.now() - 86400000).toDateString()
+                      ? {
+                          backgroundColor: "#9c4aff",
+                          alignItems: "center",
+                          padding: 5,
+                          paddingLeft: 15,
+                          paddingRight: 15,
+                          marginRight: 10,
+                          borderRadius: 10,
+                        }
+                      : {
+                          alignItems: "center",
+                          padding: 5,
+                          paddingLeft: 15,
+                          paddingRight: 15,
+                          marginRight: 10,
+                          borderRadius: 10,
+                        }
+                  }
+                >
+                  <Text
+                    style={
+                      transactionDate.toDateString() !==
+                        new Date().toDateString() &&
+                      transactionDate.toDateString() !==
+                        new Date(Date.now() - 86400000).toDateString()
+                        ? { color: "white" }
+                        : { color: "black" }
+                    }
+                  >
+                    {transactionDate.toLocaleDateString("ru", {
+                      month: "numeric",
+                      day: "numeric",
+                    })}
+                  </Text>
+                  <Text
+                    style={
+                      transactionDate.toDateString() !==
+                        new Date().toDateString() &&
+                      transactionDate.toDateString() !==
+                        new Date(Date.now() - 86400000).toDateString()
+                        ? { color: "white", fontWeight: 600 }
+                        : { color: "black", fontWeight: 600 }
+                    }
+                  >
+                    Выбранная
+                  </Text>
+                </View>
+              )}
           </View>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <TextInput
-          multiline={true}
-          numberOfLines={3}
+          <TouchableOpacity onPress={() => showDatePicker()}>
+            <View>
+              <Icon name="date" size={30} color="black" />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={{ marginBottom: 30 }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 400,
+              marginBottom: 0,
+            }}
+          >
+            Комментарий
+          </Text>
+          <TextInput
+            multiline={true}
+            numberOfLines={1}
+            style={{
+              borderBottomWidth: 2,
+              color: "gray",
+              borderColor: "black",
+              fontSize: 20,
+            }}
+            onChangeText={(text) => {
+              setTransactionDescription(text);
+            }}
+          />
+        </View>
+        <ARButton
           style={{
-            backgroundColor: "gray",
-            borderBottomWidth: 2,
-            borderColor: "black",
+            width: "90%",
+            height: 60,
+            fontSize: 15,
+            fontWeight: 600,
+            color: "white",
+            bc: "#9c4aff",
           }}
-          onChangeText={(text) => {
-            setTransactionDescription(text);
+          onPressHandler={() => {
+            createTransaction(
+              _user,
+              pickedBalanceAccount._id,
+              transactionCategory._id,
+              transactionBalance === 0 ? balanceValue : transactionBalance,
+              transactionDate,
+              transactionDescription
+            );
           }}
-        />
-      </View>
-      <ARButton
-        style={{
-          width: "90%",
-          height: 60,
-          fontSize: 15,
-          fontWeight: 600,
-          color: "white",
-          bc: "#9c4aff",
-        }}
-        onPressHandler={() => {
-          createTransaction(
-            _user,
-            pickedBalanceAccount._id,
-            transactionCategory._id,
-            transactionBalance === 0 ? balanceValue : transactionBalance,
-            transactionDate,
-            transactionDescription
-          );
-        }}
-      >
-        Добавить
-      </ARButton>
+        >
+          Добавить
+        </ARButton>
+      </ScrollView>
       {isDatePickerActive && (
         <RNDateTimePicker
           value={transactionDate}

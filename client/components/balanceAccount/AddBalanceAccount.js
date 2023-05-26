@@ -8,6 +8,7 @@ import { useAuthStore } from "../../store/auth-store";
 import PickerItems from "../picker/PickerItems";
 
 const AddBalanceAccount = ({ route }) => {
+  console.log(route?.params);
   const _user = useAuthStore((state) => state.userAuthInformation.user.id);
   const balanceAccounts = useCashStore(
     (state) => state.cashInformation.balanceAccounts
@@ -133,7 +134,7 @@ const AddBalanceAccount = ({ route }) => {
             textAlign: "center",
           }}
           onChangeText={(newBalance) => {
-            changeBalanceValue(newBalance.replace(/[^0-9]/g, ""));
+            changeBalanceValue(newBalance.replace(/[^0-9\.]/g, ""));
           }}
         />
         <CurrentCurency

@@ -33,7 +33,7 @@ const start = async () => {
       console.log(`Server started on port ${PORT}`);
     });
 
-    schedule.scheduleJob("0 */4 * * *", async () => {
+    schedule.scheduleJob("0 * */4 * *", async () => {
       const currencyConvertResponse = await axios.get(
         `https://api.freecurrencyapi.com/v1/latest?apikey=${process.env.CURRENCY_API_KEY}&currencies=`
       );

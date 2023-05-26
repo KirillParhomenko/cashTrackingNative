@@ -10,7 +10,7 @@ const BalanceAccountScreen = ({ navigation }) => {
   );
   return (
     <View style={{ height: "100%" }}>
-      <Header height={120} heightBackground={100}>
+      <Header height={100} heightBackground={100}>
         <View style={{ alignSelf: "center", top: 10 }}>
           <Text style={{ alignSelf: "center", fontSize: 25, color: "white" }}>
             {totalBalanceAccount.name}:
@@ -27,7 +27,12 @@ const BalanceAccountScreen = ({ navigation }) => {
           </Text>
         </View>
       </Header>
-      <View>
+      <View
+        style={{
+          marginBottom: 10,
+          marginTop: 10,
+        }}
+      >
         <BalanceAccountsList navigation={navigation} />
         <ARButton
           style={{

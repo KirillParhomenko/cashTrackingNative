@@ -7,7 +7,7 @@ const BalanceAccountsList = ({ navigation }) => {
     (state) => state.cashInformation.balanceAccounts
   );
   return (
-    <View style={{ height: "80%" }}>
+    <View style={{ height: "85%", marginBottom: 5 }}>
       <ScrollView>
         {balanceAccounts.map((balanceAccount, index) => {
           return (
