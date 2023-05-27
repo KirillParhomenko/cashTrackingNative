@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 
 const CategoryInfoElement = ({ data, navigation }) => {
-  console.log(data);
   return (
     <TouchableOpacity
       onPress={() => {

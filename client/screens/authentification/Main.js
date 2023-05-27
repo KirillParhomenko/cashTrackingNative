@@ -55,17 +55,6 @@ export const AuthentificationMain = ({ navigation }) => {
         >
           SIGN IN
         </ARButton>
-        <TouchableOpacity
-          style={{ alignSelf: "center" }}
-          onPress={() => {
-            signinWithoutAuth();
-            setWithoutAuth();
-          }}
-        >
-          <Text style={{ fontSize: 15, fontWeight: 600, color: "#2E4181" }}>
-            Continue use app without authorization
-          </Text>
-        </TouchableOpacity>
       </View>
     </Wrapper>
   );

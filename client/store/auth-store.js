@@ -7,6 +7,8 @@ import {
   getBalanceAccounts,
 } from "../services/cash-service";
 
+
+
 export const useAuthStore = create((set, get) => ({
   userAuthInformation: {
     accessToken: null,

@@ -18,8 +18,8 @@ import Toast from "react-native-toast-message";
 import { useCashStore } from "../../store/cash-store";
 
 export const Signin = ({ navigation }) => {
-  const [email, setEmail] = React.useState("kirya.parxomenko@gmail.com");
-  const [password, setPassword] = React.useState("somebodyknow1");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [isEmailValid, setIsEmailValid] = React.useState(null);
   const [isPasswordValid, setIsPasswordValid] = React.useState(null);

@@ -1,4 +1,4 @@
-import { View, FlatList, Text } from "react-native";
+import { View, FlatList, Text, ActivityIndicator } from "react-native";
 
 import { useEffect, useState } from "react";
 
@@ -7,7 +7,9 @@ import Header from "../../header/Header";
 
 const CategoryInfo = ({ route, navigation }) => {
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
+    setIsLoading(true);
     let finallData = [];
     route?.params?.transactions.forEach((transaction, index) => {
       const indexInArray = finallData.findIndex((element) => {
@@ -35,6 +37,7 @@ const CategoryInfo = ({ route, navigation }) => {
       );
     });
     setData(finallData);
+    setIsLoading(false);
   }, [route.params]);
 
   return (
@@ -68,13 +71,16 @@ const CategoryInfo = ({ route, navigation }) => {
           </Text>
         </View>
       </Header>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => (
-          <CategoryInfoList data={item} navigation={navigation} />
-        )}
-        keyExtractor={(item, index) => index}
-      />
+      {isLoading && <ActivityIndicator size={150} color="#9c4aff" />}
+      {!isLoading && (
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <CategoryInfoList data={item} navigation={navigation} />
+          )}
+          keyExtractor={(item, index) => index}
+        />
+      )}
     </View>
   );
 };

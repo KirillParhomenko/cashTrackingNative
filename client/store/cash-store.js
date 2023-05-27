@@ -85,15 +85,17 @@ export const useCashStore = create((set, get) => ({
         data: cashInformation.categories.categories
           .map((category, index) => {
             const finalObj = { category };
-            const transactions = cashInformation.transactions.filter(
-              (transaction) =>
-                transaction?._category?._id === category?._id &&
-                transaction?.isSpending &&
-                (filterByBalanceAccount
-                  ? transaction?._balanceAccount?._id ===
-                    pickedBalanceAccount?._id
-                  : true)
-            );
+            const transactions = cashInformation.transactions
+              .filter(
+                (transaction) =>
+                  transaction?._category?._id === category?._id &&
+                  transaction?.isSpending &&
+                  (filterByBalanceAccount
+                    ? transaction?._balanceAccount?._id ===
+                      pickedBalanceAccount?._id
+                    : true)
+              )
+              
 
             finalObj.transactions = [...transactions];
             finalObj.totalAmount = finalObj.transactions.reduce(
@@ -111,15 +113,17 @@ export const useCashStore = create((set, get) => ({
         data: cashInformation.categories.categories
           .map((category, index) => {
             const finalObj = { category };
-            const transactions = cashInformation.transactions.filter(
-              (transaction) =>
-                transaction?._category?._id === category?._id &&
-                !transaction.isSpending &&
-                (filterByBalanceAccount
-                  ? transaction?._balanceAccount?._id ===
-                    pickedBalanceAccount?._id
-                  : true)
-            );
+            const transactions = cashInformation.transactions
+              .filter(
+                (transaction) =>
+                  transaction?._category?._id === category?._id &&
+                  !transaction.isSpending &&
+                  (filterByBalanceAccount
+                    ? transaction?._balanceAccount?._id ===
+                      pickedBalanceAccount?._id
+                    : true)
+              )
+ 
 
             finalObj.transactions = [...transactions];
             finalObj.totalAmount = finalObj.transactions.reduce(
@@ -149,7 +153,6 @@ export const useCashStore = create((set, get) => ({
       categorySortedCashInformation,
     }));
   },
-
   createTransaction: async (
     _user,
     _balanceAccount,

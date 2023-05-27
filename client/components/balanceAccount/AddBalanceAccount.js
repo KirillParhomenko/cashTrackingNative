@@ -6,6 +6,7 @@ import { useCashStore } from "../../store/cash-store";
 import { ARButton } from "../UI/Button";
 import { useAuthStore } from "../../store/auth-store";
 import PickerItems from "../picker/PickerItems";
+import Header from "../header/Header";
 
 const AddBalanceAccount = ({ route }) => {
   console.log(route?.params);
@@ -30,7 +31,9 @@ const AddBalanceAccount = ({ route }) => {
     (state) => state.deleteBalanceAccountRecipient
   );
   const [balanceValue, setBalanceValue] = useState(
-    route?.params?.type === "change" ? route?.params?.data?.balance : 0
+    route?.params?.type === "change"
+      ? route?.params?.data?.balance.toFixed(1)
+      : 0
   );
   const [convertTo, setConvertTo] = useState(
     route?.params?.type === "change"
@@ -101,91 +104,119 @@ const AddBalanceAccount = ({ route }) => {
     setBalanceValue(newBalance);
   };
   return (
-    <View style={{ height: "100%", paddingTop: 10 }}>
-      <TouchableOpacity
-        style={{
-          position: "absolute",
-          top: 40,
-          right: 20,
-        }}
-        onPress={() => {
-          showConfirmDialog();
-        }}
-      >
-        <Icon name="delete" size={40} color="red" />
-      </TouchableOpacity>
-      <View
-        style={{
-          flexDirection: "row",
-          alignSelf: "center",
-          alignItems: "center",
-          marginTop: 100,
-        }}
-      >
-        <TextInput
-          keyboardType="numeric"
-          maxLength={20}
-          defaultValue={balanceValue !== 0 ? balanceValue.toString() : ""}
-          placeholder="0"
+    <View style={{ height: "100%" }}>
+      <Header height={100} heightBackground={70}>
+        <Text
           style={{
-            borderBottomWidth: 1,
-            width: 120,
-            fontSize: 30,
-            textAlign: "center",
+            fontSize: 20,
+            color: "white",
+            fontWeight: 600,
+            alignSelf: "center",
+            top: 20,
           }}
-          onChangeText={(newBalance) => {
-            changeBalanceValue(newBalance.replace(/[^0-9\.]/g, ""));
-          }}
-        />
-        <CurrentCurency
-          navigation={route.params.navigation}
-          initialCurrency={initialCurrency}
-          pickedCurrency={convertTo}
-          changeConvertTo={changeConvertTo}
-        />
+        >
+          {route?.params?.type === "change" ? "Изменить счет" : "Добавить счет"}
+        </Text>
+      </Header>
+      <View style={{ justifyContent: "space-between", height: "85%" }}>
+        <View>
+          <View style={{ width: "70%", alignSelf: "center", marginBottom: 50 }}>
+            <Text>Имя счета</Text>
+            <TextInput
+              style={{
+                borderBottomWidth: 1,
+                width: "100%",
+                fontSize: 30,
+                textAlign: "center",
+              }}
+              defaultValue={balanceAccountName}
+              onChangeText={(text) => {
+                setBalanceAccountName(text);
+              }}
+            ></TextInput>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignSelf: "center",
+              alignItems: "center",
+            }}
+          >
+            <TextInput
+              keyboardType="numeric"
+              maxLength={20}
+              defaultValue={balanceValue !== 0 ? balanceValue.toString() : ""}
+              placeholder="0"
+              style={{
+                borderBottomWidth: 1,
+                width: 150,
+                fontSize: 30,
+                textAlign: "center",
+              }}
+              onChangeText={(newBalance) => {
+                changeBalanceValue(newBalance.replace(/[^0-9\.]/g, ""));
+              }}
+            />
+            <View style={{ position: "absolute", right: -50 }}>
+              <CurrentCurency
+                navigation={route.params.navigation}
+                initialCurrency={initialCurrency}
+                pickedCurrency={convertTo}
+                changeConvertTo={changeConvertTo}
+              />
+            </View>
+          </View>
+        </View>
+        <View>
+          <ARButton
+            style={{
+              width: "90%",
+              height: 60,
+              fontSize: 15,
+              fontWeight: 600,
+              color: "white",
+              bc: "#9c4aff",
+            }}
+            onPressHandler={() => {
+              route?.params?.type === "change"
+                ? updateBalanceAccount(
+                    _user,
+                    route?.params?.data?._id,
+                    convertTo,
+                    balanceAccountName,
+                    balanceValue
+                  )
+                : createBalanceAccount(
+                    _user,
+                    convertTo,
+                    balanceAccountName,
+                    balanceValue
+                  );
+            }}
+          >
+            {route?.params?.type === "change" ? "Изменить" : "Добавить"}
+          </ARButton>
+          {route?.params?.type === "change" && (
+            <View style={{ marginTop: 20 }}>
+              <ARButton
+                style={{
+                  width: "90%",
+                  height: 60,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: "white",
+                  bc: "red",
+                }}
+                onPressHandler={() => {
+                  showConfirmDialog();
+                }}
+              >
+                {"Удалить счет"}
+              </ARButton>
+            </View>
+          )}
+        </View>
       </View>
-      <View style={{ width: "90%", alignSelf: "center" }}>
-        <Text>Имя счета</Text>
-        <TextInput
-          style={{
-            borderBottomWidth: 1,
-            width: "90%",
-            fontSize: 30,
-          }}
-          defaultValue={balanceAccountName}
-          onChangeText={(text) => {
-            setBalanceAccountName(text);
-          }}
-        ></TextInput>
-      </View>
-      <ARButton
-        style={{
-          width: "90%",
-          height: 60,
-          fontSize: 15,
-          fontWeight: 600,
-          color: "white",
-          bc: "#9c4aff",
-        }}
-        onPressHandler={() => {
-          route?.params?.type === "change"
-            ? updateBalanceAccount(
-                _user,
-                route?.params?.data?._id,
-                convertTo,
-                balanceAccountName,
-                balanceValue
-              )
-            : createBalanceAccount(
-                _user,
-                convertTo,
-                balanceAccountName,
-                balanceValue
-              );
-        }}
-      >
-        {route?.params?.type === "change" ? "Изменить" : "Добавить"}
-      </ARButton>
       {isBalanceAccountPickerAvailable && (
         <PickerItems
           onHidePicker={onBalanceAccountHidePicker}

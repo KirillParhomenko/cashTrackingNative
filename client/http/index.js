@@ -2,7 +2,7 @@ import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as SecureStore from "expo-secure-store";
 
-const API_URL = "http://192.168.92.64:5000/api";
+const API_URL = "http://192.168.100.105:5000/api";
 
 export const apiAuthInstance = axios.create({ baseURL: API_URL });
 
