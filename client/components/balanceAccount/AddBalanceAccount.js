@@ -69,7 +69,7 @@ const AddBalanceAccount = ({ route }) => {
     }
   }, [recipientBalanceAccount]);
 
-  const showConfirmDialog = () => {
+  const showConfirmDialog = (navigation) => {
     return Alert.alert("Удалить счет?", "", [
       {
         text: "ОТМЕНА",
@@ -87,12 +87,14 @@ const AddBalanceAccount = ({ route }) => {
               text: "Удалить, оставив транзакции",
               onPress: () => {
                 onBalanceAccountShowPicker();
+                navigation.navigate("Home");
               },
             },
             {
               text: "Удалить с транзакциями",
               onPress: () => {
                 deleteBalanceAccount(_user, route?.params?.data?._id);
+                navigation.navigate("Home");
               },
             },
           ]),
@@ -192,6 +194,7 @@ const AddBalanceAccount = ({ route }) => {
                     balanceAccountName,
                     balanceValue
                   );
+              route?.params?.navigation.navigate("Home");
             }}
           >
             {route?.params?.type === "change" ? "Изменить" : "Добавить"}
@@ -208,7 +211,7 @@ const AddBalanceAccount = ({ route }) => {
                   bc: "red",
                 }}
                 onPressHandler={() => {
-                  showConfirmDialog();
+                  showConfirmDialog(route?.params?.navigation);
                 }}
               >
                 {"Удалить счет"}

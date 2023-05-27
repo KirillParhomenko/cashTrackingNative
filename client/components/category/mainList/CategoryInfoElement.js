@@ -4,7 +4,7 @@ const CategoryInfoElement = ({ data, navigation }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("TransactionInfo", data);
+        navigation.navigate("TransactionInfo", { data, navigation });
       }}
     >
       <View

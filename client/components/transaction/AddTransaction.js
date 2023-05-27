@@ -483,6 +483,7 @@ const AddTransaction = ({ navigation }) => {
               transactionDate,
               transactionDescription
             );
+            navigation.navigate("Home");
           }}
         >
           Добавить
