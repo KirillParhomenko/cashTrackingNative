@@ -87,7 +87,6 @@ const AddBalanceAccount = ({ route }) => {
               text: "Удалить, оставив транзакции",
               onPress: () => {
                 onBalanceAccountShowPicker();
-                navigation.navigate("Home");
               },
             },
             {
